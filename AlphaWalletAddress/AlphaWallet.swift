@@ -1,7 +1,6 @@
 // Copyright © 2018 Stormbird PTE. LTD.
 
 import Foundation
-//TODO remove all dependencies
 import TrustKeystore
 import WalletCore
 

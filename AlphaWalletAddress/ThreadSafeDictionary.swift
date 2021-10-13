@@ -11,7 +11,7 @@ public class ThreadSafeDictionary<Key: Hashable, Value> {
     private var cache = [Key: Value]()
     private let queue = DispatchQueue(label: "SynchronizedArrayAccess", attributes: .concurrent)
 
-    subscript(server: Key) -> Value? {
+    public subscript(server: Key) -> Value? {
         get {
             var element: Value?
             queue.sync { [weak self] in
@@ -25,14 +25,17 @@ public class ThreadSafeDictionary<Key: Hashable, Value> {
             }
         }
     }
+    public init() {
+        
+    }
 
-    func removeAll() {
+    public func removeAll() {
         queue.async(flags: .barrier) { [weak self] in
             self?.cache.removeAll()
         }
     }
 
-    @discardableResult func removeValue(forKey key: Key) -> Value? {
+    @discardableResult public func removeValue(forKey key: Key) -> Value? {
         var element: Value?
         queue.sync { [weak self] in
             if let index = self?.cache.firstIndex(where: { $0.key == key }) {
@@ -42,7 +45,7 @@ public class ThreadSafeDictionary<Key: Hashable, Value> {
         return element
     }
 
-    var values: [Key: Value] {
+    public var values: [Key: Value] {
         var elements: [Key: Value] = [:]
         queue.sync { [weak self] in
             elements = self?.cache ?? [:]
